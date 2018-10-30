@@ -10,11 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dto.Card;
 import com.dto.User;
-import com.exception.DatabaseException;
 import com.repository.CardRepository;
 
 @Service
-@Transactional(rollbackFor=DatabaseException.class)
 public class CardServiceImpl implements CardService{
 
 	@Autowired
@@ -23,31 +21,31 @@ public class CardServiceImpl implements CardService{
 	@Override
 	@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 	public Card getCardById(int cardId) {
-		return cardRespository.getCardById(cardId);
+		return cardRespository.findById(cardId).get();
 	}
 
 	@Override
 	@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 	public List<Card> getCardsByUser(User user) {
-		return cardRespository.getCardsByUser(user);
+		return cardRespository.getCardByUser(user);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public int addCard(Card card) throws DatabaseException {
-		return cardRespository.addCard(card);
+	public int addCard(Card card){
+		return cardRespository.save(card).getCardId();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public int updateCard(Card card) throws DatabaseException {
-		return cardRespository.updateCard(card);
+	public int updateCard(Card card){
+		return cardRespository.save(card).getCardId();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public int deleteCardById(int cardId) throws DatabaseException {
-		return cardRespository.deleteCardById(cardId);
+	public void deleteCardById(int cardId)  {
+		 cardRespository.deleteById(cardId);
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.repository;
+/*package com.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,3 +65,4 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 }
+*/

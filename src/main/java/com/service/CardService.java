@@ -15,5 +15,5 @@ public interface CardService {
 	
 	public int updateCard(Card card) throws DatabaseException;
 	
-	public int deleteCardById(int cardId) throws DatabaseException;
+	public void deleteCardById(int cardId) throws DatabaseException;
 }

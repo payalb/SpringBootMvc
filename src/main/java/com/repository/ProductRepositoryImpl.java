@@ -5,15 +5,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,14 +31,12 @@ import com.exception.DatabaseException;
 public class ProductRepositoryImpl implements ProductRepository {
 
 	@Autowired
-	private SessionFactory sessionFactory;
-	@Autowired
-	private HibernateTemplate template;
+	private EntityManagerFactory emf;
 
 	@Override
 	@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 	public Product getProductById(int productId) throws DatabaseException {
-		Session session = sessionFactory.openSession();
+		Session session = emf.unwrap(SessionFactory.class).openSession();
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 		Product product = null;
 		try {
@@ -56,7 +56,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 	@Override
 	@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 	public List<Product> getProductsByKeyword(String keyword, List<Category> categories, int index, int maxNum) {
-		Session session = sessionFactory.openSession();
+		Session session = emf.unwrap(SessionFactory.class).openSession();
 		List<Product> products = new ArrayList<>();
 		String hql = null;
 		Query<Search> query = null;
@@ -99,7 +99,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 	@Override
 	@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 	public int getProductsListSize(String keyword, List<Category> categories) {
-		Session session = sessionFactory.openSession();
+		Session session = emf.unwrap(SessionFactory.class).openSession();
 		String hql = null;
 		Query<Search> query = null;
 		int size = 0;
@@ -134,17 +134,16 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 	@Override
 	public void updateProduct(Product product) throws DatabaseException {
-//		Session session = sessionFactory.openSession();
-//		Transaction transaction = session.beginTransaction();
-//		try {
-//			session.update(product);
-//			transaction.commit();
-//		} catch (HibernateException e) {
-//			throw new DatabaseException("Unable to update product information.");
-//		} finally {
-//			session.close();
-//		}
-		template.update(product);
+		Session session = emf.unwrap(SessionFactory.class).openSession();
+		Transaction transaction = session.beginTransaction();
+		try {
+			session.update(product);
+			transaction.commit();
+		} catch (HibernateException e) {
+			throw new DatabaseException("Unable to update product information.");
+		} finally {
+			session.close();
+		}
 	}
 	
 	@Override
@@ -167,7 +166,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 	@Override
 	@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 	public List<Product> getIndexList() {
-		Session session = sessionFactory.openSession();
+		Session session = emf.unwrap(SessionFactory.class).openSession();
 		String hql = "from product ORDER BY productId desc";
 		List<Product> products = new ArrayList<>();
 		try {

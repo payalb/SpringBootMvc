@@ -20,5 +20,5 @@ public interface CartItemService {
 
 	public void deleteCartItemByUser(User user) throws DatabaseException;
 	
-	public int deleteCartItemById(int cartItemId) throws DatabaseException;
+	public void deleteCartItemById(int cartItemId) throws DatabaseException;
 }

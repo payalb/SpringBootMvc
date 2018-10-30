@@ -18,17 +18,17 @@ public class UserServiceImpl implements UserService{
 	@Override
 	@Transactional(readOnly = true)
 	public User getUserById(int id) {
-		return userRepository.getUserById(id);
+		return userRepository.findById(id).get();
 	}
 
 	@Override
 	public int addUser(User user) throws DatabaseException {
-		return userRepository.addUser(user);
+		return userRepository.save(user).getUserId();
 	}
 
 	@Override
 	public int updateUser(User user) throws DatabaseException {
-		return userRepository.updateUser(user);
+		return userRepository.save(user).getUserId();
 	}
 
 }

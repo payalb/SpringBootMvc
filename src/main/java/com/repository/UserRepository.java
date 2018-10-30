@@ -1,14 +1,10 @@
 package com.repository;
 
+import org.springframework.data.repository.CrudRepository;
+
 import com.dto.User;
-import com.exception.DatabaseException;
 
-public interface UserRepository {
+public interface UserRepository extends CrudRepository<User, Integer>{
 	
-	public User getUserById(int id);
-
-	public int addUser(User user) throws DatabaseException;
-
-	public int updateUser(User user) throws DatabaseException;
 
 }

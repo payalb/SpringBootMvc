@@ -1,5 +1,6 @@
 package com.repository;
 
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -15,13 +16,11 @@ import com.exception.DatabaseException;
 @Repository
 public class LoginRepositoryImpl implements LoginRepository{
 
-	@Autowired SessionFactory sessionFactory;
-//	@Autowired
-//	HibernateTemplate hibernateTemplate;
+	@Autowired EntityManagerFactory emf;
 	
 	@Override
 	public Login getLogin(Login login) {
-		Session session = sessionFactory.openSession();
+		Session session = emf.unwrap(SessionFactory.class).openSession();
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 		CriteriaQuery<Login> cq = cb.createQuery(Login.class);
 		Root<Login> root = cq.from(Login.class);
@@ -36,7 +35,7 @@ public class LoginRepositoryImpl implements LoginRepository{
 	@Override
 	public Login addLogin(Login login) throws DatabaseException {
 		
-		Session s = sessionFactory.openSession();
+		Session s = emf.unwrap(SessionFactory.class).openSession();
 		try {
 			s.beginTransaction();
 			s.save(login.getUser());
@@ -53,7 +52,7 @@ public class LoginRepositoryImpl implements LoginRepository{
 
 	@Override
 	public Login updateLogin(Login login) {
-		Session s = sessionFactory.openSession();
+		Session s = emf.unwrap(SessionFactory.class).openSession();
 		try {
 			s.beginTransaction();
 			s.update(login);
@@ -66,7 +65,7 @@ public class LoginRepositoryImpl implements LoginRepository{
 
 	@Override
 	public boolean existEmail(String email) {
-		Session session = sessionFactory.openSession();
+		Session session = emf.unwrap(SessionFactory.class).openSession();
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 		CriteriaQuery<Login> cq = cb.createQuery(Login.class);
 		Root<Login> root = cq.from(Login.class);

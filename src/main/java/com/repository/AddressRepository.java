@@ -2,19 +2,12 @@ package com.repository;
 
 import java.util.List;
 
+import org.springframework.data.repository.CrudRepository;
+
 import com.dto.Address;
-import com.dto.User;
-import com.exception.DatabaseException;
 
-public interface AddressRepository {
-	
-	public Address getAddressById(int addressId) throws DatabaseException;
+public interface AddressRepository extends CrudRepository<Address, Integer>{
 
-	public List<Address> getAddressByUser(User user);
+	public List<Address> findByUsers_userId(int userId);
 	
-	public int addAddress(Address address) throws DatabaseException;
-	
-	public int updateAddress(Address address) throws DatabaseException;
-	
-	public int deleteAddressById(int addressId) throws DatabaseException;
 }

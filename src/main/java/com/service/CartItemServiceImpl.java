@@ -23,7 +23,7 @@ public class CartItemServiceImpl implements CartItemService{
 	@Override
 	@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 	public CartItem getCartItemById(int cartItemId) {
-		return cartItemRepository.getCartItemById(cartItemId);
+		return cartItemRepository.findById(cartItemId).get();
 	}
 
 	@Override
@@ -35,19 +35,19 @@ public class CartItemServiceImpl implements CartItemService{
 	@Override
 	@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 	public int haveCartItem(CartItem cartItem) {
-		return cartItemRepository.haveCartItem(cartItem);
+		return cartItemRepository.findById(cartItem.getCartItemId()).get().getCartItemId();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public int addCartItem(CartItem cartItem) throws DatabaseException {
-		return cartItemRepository.addCartItem(cartItem);
+		return cartItemRepository.save(cartItem).getCartItemId();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public int updateCartItem(CartItem cartItem) throws DatabaseException {
-		return cartItemRepository.updateCartItem(cartItem);
+		return cartItemRepository.save(cartItem).getCartItemId();
 	}
 
 	@Override
@@ -58,8 +58,8 @@ public class CartItemServiceImpl implements CartItemService{
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public int deleteCartItemById(int cartItemId) throws DatabaseException {
-		return cartItemRepository.deleteCartItemById(cartItemId);
+	public void deleteCartItemById(int cartItemId) throws DatabaseException {
+		 cartItemRepository.deleteById(cartItemId);
 	}
 
 }

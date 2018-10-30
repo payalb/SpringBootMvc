@@ -2,19 +2,13 @@ package com.repository;
 
 import java.util.List;
 
+import org.springframework.data.repository.CrudRepository;
+
 import com.dto.Card;
 import com.dto.User;
-import com.exception.DatabaseException;
 
-public interface CardRepository {
+public interface CardRepository extends CrudRepository<Card, Integer> {
 	
-	public Card getCardById(int cardId);
+	public List<Card> getCardByUser(User user);
 
-	public List<Card> getCardsByUser(User user);
-
-	public int addCard(Card card) throws DatabaseException;
-	
-	public int updateCard(Card card) throws DatabaseException;
-	
-	public int deleteCardById(int cardId) throws DatabaseException;
 }

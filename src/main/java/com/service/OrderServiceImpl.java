@@ -81,8 +81,8 @@ public class OrderServiceImpl implements OrderService{
 			productRepository.updateProduct(product);
 			products.put(product, item.getAmount());
 		}
-		Address address = addressRepository.getAddressById(addressId);
-		Card card = cardRepository.getCardById(cardId);
+		Address address = addressRepository.findById(addressId).get();
+		Card card = cardRepository.findById(cardId).get();
 		Order order = new Order(user, address, card, products, new Date(new java.util.Date().getTime())
 				, orderAmount, OrderStatus.ACTIVE);
 		orderRepository.addOrder(order);
