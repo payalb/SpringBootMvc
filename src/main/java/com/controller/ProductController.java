@@ -31,6 +31,7 @@ public class ProductController {
 		List<Product> productList = new ArrayList<>();
 		productList = productService.getIndexList();
 		mv.addObject("productList", productList);
+		System.out.println("in controller!");
 		mv.setViewName("index");
 		return mv;
 	}
